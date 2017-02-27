@@ -1,0 +1,3 @@
+services:
+    file-reader:
+        class:     Commission\FileReader
