@@ -7,6 +7,21 @@ use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 class FileReader
 {
     /**
+     * @var \Commission\PaymentCreator
+     */
+    private $PaymentCreator;
+
+    /**
+     * FileReader constructor.
+     *
+     * @param \Commission\PaymentCreator $PaymentCreator
+     */
+    public function __construct(PaymentCreator $PaymentCreator)
+    {
+        $this->PaymentCreator = $PaymentCreator;
+    }
+
+    /**
      * @param $path
      * @param $csvLength
      * @param $csvDelimiter
@@ -21,18 +36,11 @@ class FileReader
         $fileArray = [];
         $fileResource = fopen($path, "r");
         while (($line = fgetcsv($fileResource, $csvLength, $csvDelimiter)) !== false) {
-            $fileArray[] = $this->arrangeLine($line);
+            $fileArray[] = $line;
         }
 
         fclose($fileResource);
 
         return $fileArray;
-    }
-
-    public function arrangeLine($line)
-    {
-        $arrangedLine = [];
-
-        return $arrangedLine;
     }
 }

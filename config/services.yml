@@ -1,3 +1,7 @@
 services:
     file-reader:
-        class:     Commission\FileReader
+        class:  Commission\FileReader
+        arguments: ['@payment-creator']
+    payment-creator:
+        class:  Commission\PaymentCreator
+        arguments: ['%payment-creator.config%']

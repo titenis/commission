@@ -1,0 +1,21 @@
+parameters:
+    payment-creator.config:
+      fields:
+        - date
+        - user_id
+        - user_type
+        - payment_type
+        - payment_amount
+        - payment_currency
+      date_format:
+        Y-m-d
+      user_types:
+        - natural
+        - legal
+      payment_types:
+        - cash_in
+        - cash_out
+      currencies:
+        - EUR
+        - USD
+        - JPY
