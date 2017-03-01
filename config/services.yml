@@ -4,3 +4,6 @@ services:
     payment-creator:
         class:  Commission\PaymentCreator
         arguments: ['%payment-creator.config%']
+    calculator:
+        class:  Commission\Calculator
+        arguments: ['%calculator.config%']

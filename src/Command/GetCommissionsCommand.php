@@ -2,16 +2,16 @@
 
 namespace Commission\Command;
 
+use Commission\Calculator;
+use Commission\FileReader;
+use Commission\PaymentCreator;
+use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
-use Commission\FileReader;
-use Commission\Calculator;
-use Commission\PaymentCreator;
 
 class GetCommissionsCommand extends Command
 {
@@ -37,6 +37,7 @@ class GetCommissionsCommand extends Command
 
         $this->FileReader = $container->get('file-reader');
         $this->PaymentCreator = $container->get('payment-creator');
+        $this->Calculator = $container->get('calculator');
 
         $this->setName('commissions:get-from-file');
         $this->setDescription('Gets commissions from csv file');
@@ -49,8 +50,9 @@ class GetCommissionsCommand extends Command
 
         $fileArray = $this->FileReader->readFile($filePath);
         $payments = $this->PaymentCreator->createFromArray($fileArray);
+        $results = $this->Calculator->calculateCommissions($payments);
 
-        var_dump($payments);
+        var_dump($results);
 
         return 0;
     }

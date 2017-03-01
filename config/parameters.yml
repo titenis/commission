@@ -19,3 +19,20 @@ parameters:
         - EUR
         - USD
         - JPY
+    calculator.config:
+      fees:
+        in:
+          commission_fee_percent: 0.03
+          max_fee: 5
+        out:
+          natural:
+            commission_fee_percent: 0.3
+            free_payments_amount_per_week: 1000
+            free_payments_count_per_week: 3
+          legal:
+            commission_fee_percent: 0.3
+            min_fee: 0.5
+      currency_rates:
+        EUR: 1
+        USD: 1.1497
+        JPY: 129.53
