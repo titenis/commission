@@ -2,8 +2,15 @@
 
 namespace Commission;
 
+use Commission\Entity\Money;
 use Commission\Entity\Payment;
+use Commission\Entity\User;
 
+/**
+ * Class PaymentCreator
+ *
+ * @package Commission
+ */
 class PaymentCreator
 {
     /**
@@ -43,16 +50,15 @@ class PaymentCreator
     /**
      * @param $array
      * @return \Commission\Entity\Payment
-     * @throws \Commission\Exception\InvalidAmountException
-     * @throws \Commission\Exception\InvalidCurrencyException
      * @throws \Commission\Exception\InvalidPaymentTypeException
-     * @throws \Commission\Exception\InvalidUserTypeException
      * @throws \Commission\Exception\WrongDateFormatException
      * @throws \Commission\Exception\WrongUserIdException
      */
     public function createPayment($array)
     {
         $payment = new Payment();
+        $user = new User();
+        $money = new Money();
 
         foreach ($array as $key => $element) {
             switch ($this->config['fields'][$key]) {
@@ -60,22 +66,25 @@ class PaymentCreator
                     $payment->setDate($element, $this->config['date_format']);
                     break;
                 case 'user_id':
-                    $payment->setUserId($element);
+                    $user->setId($element);
                     break;
                 case 'user_type':
-                    $payment->setUserType($element, $this->config['user_types']);
+                    $user->setType($element, $this->config['user_types']);
                     break;
                 case 'payment_type':
                     $payment->setType($element, $this->config['payment_types']);
                     break;
                 case 'payment_amount':
-                    $payment->setAmount($element);
+                    $money->setAmount($element);
                     break;
                 case 'payment_currency':
-                    $payment->setCurrency($element, $this->config['currencies']);
+                    $money->setCurrency($element, $this->config['currencies']);
                     break;
             }
         }
+
+        $payment->setUser($user);
+        $payment->setMoney($money);
 
         return $payment;
     }

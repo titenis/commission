@@ -2,37 +2,68 @@
 
 namespace Commission\Entity;
 
-use DateTime;
-use Commission\Exception\WrongDateFormatException;
-use Commission\Exception\WrongUserIdException;
-use Commission\Exception\InvalidAmountException;
-use Commission\Exception\InvalidCurrencyException;
 use Commission\Exception\InvalidPaymentTypeException;
-use Commission\Exception\InvalidUserTypeException;
+use Commission\Exception\WrongDateFormatException;
+use DateTime;
 
+/**
+ * Class Payment
+ *
+ * @package Commission\Entity
+ */
 class Payment
 {
     /**
      * @var DateTime
      */
     private $date;
+    /**
+     * @var string
+     */
+    private $type;
+    /**
+     * @var User
+     */
+    private $User;
+    /**
+     * @var Money
+     */
+    private $Money;
 
     /**
-     * @var int
+     * @return User
      */
-    private $userId;
-    private $userType;
-    private $type;
-    private $amount;
-    private $currency;
-
-    public function __construct()
+    public function getUser()
     {
-
+        return $this->User;
     }
 
     /**
-     * @return mixed
+     * @param User $User
+     */
+    public function setUser(User $User)
+    {
+        $this->User = $User;
+    }
+
+    /**
+     * @return Money
+     */
+    public function getMoney()
+    {
+        return $this->Money;
+    }
+
+    /**
+     * @param Money $Money
+     */
+    public function setMoney($Money)
+    {
+        $this->Money = $Money;
+    }
+
+    /**
+     * @return DateTime
      */
     public function getDate()
     {
@@ -46,58 +77,17 @@ class Payment
      */
     public function setDate($date, $format)
     {
-        if (DateTime::createFromFormat($format, $date) == false) {
+        $date = DateTime::createFromFormat($format, $date);
+
+        if ($date == false) {
             throw new WrongDateFormatException;
         }
 
-        $this->date = new DateTime($date);
+        $this->date = $date;
     }
 
     /**
-     * @return mixed
-     */
-    public function getUserId()
-    {
-        return $this->userId;
-    }
-
-    /**
-     * @param $userId
-     * @throws WrongUserIdException
-     */
-    public function setUserId($userId)
-    {
-        if (ctype_digit($userId) == false) {
-            throw new WrongUserIdException;
-        }
-
-        $this->userId = (int) $userId;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getUserType()
-    {
-        return $this->userType;
-    }
-
-    /**
-     * @param $userType
-     * @param $availableUserTypes
-     * @throws InvalidUserTypeException
-     */
-    public function setUserType($userType, $availableUserTypes)
-    {
-        if (in_array($userType, $availableUserTypes) == false) {
-            throw new InvalidUserTypeException;
-        }
-
-        $this->userType = $userType;
-    }
-
-    /**
-     * @return mixed
+     * @return string
      */
     public function getType()
     {
@@ -118,46 +108,4 @@ class Payment
         $this->type = $type;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getAmount()
-    {
-        return $this->amount;
-    }
-
-    /**
-     * @param $amount
-     * @throws InvalidAmountException
-     */
-    public function setAmount($amount)
-    {
-        if (is_numeric($amount) == false) {
-            throw new InvalidAmountException;
-        }
-
-        $this->amount = 0 + $amount;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCurrency()
-    {
-        return $this->currency;
-    }
-
-    /**
-     * @param $currency
-     * @param $availableCurrency
-     * @throws InvalidCurrencyException
-     */
-    public function setCurrency($currency, $availableCurrency)
-    {
-        if (in_array($currency, $availableCurrency) == false) {
-            throw new InvalidCurrencyException;
-        }
-
-        $this->currency = $currency;
-    }
 }

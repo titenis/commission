@@ -4,23 +4,13 @@ namespace Commission;
 
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 
+/**
+ * Class FileReader
+ *
+ * @package Commission
+ */
 class FileReader
 {
-    /**
-     * @var \Commission\PaymentCreator
-     */
-    private $PaymentCreator;
-
-    /**
-     * FileReader constructor.
-     *
-     * @param \Commission\PaymentCreator $PaymentCreator
-     */
-    public function __construct(PaymentCreator $PaymentCreator)
-    {
-        $this->PaymentCreator = $PaymentCreator;
-    }
-
     /**
      * @param $path
      * @param $csvLength
