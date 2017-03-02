@@ -13,6 +13,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
+/**
+ * Class GetCommissionsCommand
+ *
+ * @package Commission\Command
+ */
 class GetCommissionsCommand extends Command
 {
     /**
@@ -40,10 +45,14 @@ class GetCommissionsCommand extends Command
         $this->Calculator = $container->get('calculator');
 
         $this->setName('commissions:get-from-file');
-        $this->setDescription('Gets commissions from csv file');
+        $this->setDescription('Calculates and outputs commissions from csv file');
         $this->addArgument('filePath', InputArgument::REQUIRED, 'Path to the file source');
     }
 
+    /**
+     * @param \Symfony\Component\Console\Input\InputInterface   $input
+     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $filePath = $input->getArgument('filePath');
@@ -52,8 +61,8 @@ class GetCommissionsCommand extends Command
         $payments = $this->PaymentCreator->createFromArray($fileArray);
         $results = $this->Calculator->calculateCommissions($payments);
 
-        var_dump($results);
-
-        return 0;
+        foreach ($results as $singleResult) {
+            $output->writeln($singleResult);
+        }
     }
 }

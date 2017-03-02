@@ -5,6 +5,7 @@ namespace Commission\Entity;
 use Commission\Exception\CurrencyNotFoundException;
 use Commission\Exception\InvalidAmountException;
 use Commission\Exception\InvalidCurrencyException;
+use Commission\MathInterface;
 
 /**
  * Class Money
@@ -25,13 +26,31 @@ class Money
      * @var array
      */
     private $currencyRates;
+    /**
+     * @var MathInterface
+     */
+    private $math;
 
+    /**
+     * Money constructor.
+     *
+     * @param \Commission\MathInterface $math
+     */
+    public function __construct(MathInterface $math)
+    {
+        $this->math = $math;
+    }
+
+    /**
+     * @return mixed
+     * @throws \Commission\Exception\CurrencyNotFoundException
+     */
     public function getEurAmount()
     {
         $amount = $this->getAmount();
         $currencyRate = $this->getCurrencyRate($this->getCurrency());
 
-        return $amount / $currencyRate;
+        return $this->math->div($amount, $currencyRate);
     }
 
     /**
@@ -44,7 +63,7 @@ class Money
 
     /**
      * @param $amount
-     * @throws InvalidAmountException
+     * @throws \Commission\Exception\InvalidAmountException
      */
     public function setAmount($amount)
     {
@@ -52,7 +71,7 @@ class Money
             throw new InvalidAmountException;
         }
 
-        $this->amount = 0 + $amount;
+        $this->amount = $this->math->add(0, $amount);
     }
 
     /**

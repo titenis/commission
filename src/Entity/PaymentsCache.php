@@ -2,6 +2,8 @@
 
 namespace Commission\Entity;
 
+use Commission\MathInterface;
+
 /**
  * Class PaymentsCache
  *
@@ -25,6 +27,20 @@ class PaymentsCache
      * @var
      */
     private $week;
+    /**
+     * @var MathInterface
+     */
+    private $math;
+
+    /**
+     * PaymentsCache constructor.
+     *
+     * @param \Commission\MathInterface $math
+     */
+    public function __construct(MathInterface $math)
+    {
+        $this->math = $math;
+    }
 
     /**
      * @return array
@@ -54,7 +70,10 @@ class PaymentsCache
         if (empty($this->cache[$userId][$year][$week]['total'])) {
             $this->cache[$userId][$year][$week]['total'] = $amount;
         } else {
-            $this->cache[$userId][$year][$week]['total'] += $amount;
+            $this->cache[$userId][$year][$week]['total'] = $this->math->add(
+                $this->cache[$userId][$year][$week]['total'],
+                $amount
+            );
         }
     }
 
@@ -162,5 +181,15 @@ class PaymentsCache
         $week = $this->getWeek();
 
         return !isset($this->cache[$userId][$year][$week]['count']) ? 1 : $this->cache[$userId][$year][$week]['count'];
+    }
+
+    /**
+     * @param $amount
+     * @param $limit
+     * @return bool
+     */
+    public function totalIsExceededByLimit($amount, $limit)
+    {
+        return $this->math->sub($this->getTotal(), $amount) < $limit;
     }
 }

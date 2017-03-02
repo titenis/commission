@@ -58,7 +58,7 @@ class PaymentCreator
     {
         $payment = new Payment();
         $user = new User();
-        $money = new Money();
+        $money = new Money(new Math());
 
         foreach ($array as $key => $element) {
             switch ($this->config['fields'][$key]) {
