@@ -6,4 +6,8 @@ services:
         arguments: ['%payment-creator.config%']
     calculator:
         class:  Commission\Calculator
-        arguments: ['%calculator.config%']
+        arguments:
+          - '%calculator.config%'
+          - '@payments-cache'
+    payments-cache:
+        class:  Commission\Entity\PaymentsCache

@@ -2,7 +2,9 @@
 
 namespace Commission;
 
+use Commission\Entity\Money;
 use Commission\Entity\Payment;
+use Commission\Entity\PaymentsCache;
 use Datetime;
 
 class Calculator
@@ -13,11 +15,13 @@ class Calculator
     /**
      * Calculator constructor.
      *
-     * @param $config
+     * @param                                  $config
+     * @param \Commission\Entity\PaymentsCache $paymentsCache
      */
-    public function __construct($config)
+    public function __construct($config, PaymentsCache $paymentsCache)
     {
         $this->config = $config;
+        $this->paymentsCache = $paymentsCache;
     }
 
     public function calculateCommissions($payments)
@@ -52,8 +56,7 @@ class Calculator
                 break;
             case 'cash_out';
                 return $this->getCashOutCommission(
-                    $money->getEurAmount(),
-                    $money->getAmount(),
+                    $money,
                     $user->getType(),
                     $user->getId(),
                     $payment->getDate()
@@ -74,10 +77,10 @@ class Calculator
             $fee = $min;
         }
 
-        return $this->format($fee);
+        return $this->formatAndRound($fee);
     }
 
-    public function format($number)
+    public function formatAndRound($number)
     {
         return number_format($this->roundUp($number), 2);
     }
@@ -89,13 +92,12 @@ class Calculator
         return (ceil($number * $fig) / $fig);
     }
 
-    public function getCashOutCommission($amountEur, $amountOriginal, $userType, $userId, $paymentDate)
+    public function getCashOutCommission(Money $money, $userType, $userId, $paymentDate)
     {
         switch ($userType) {
             case 'natural':
                 return $this->calculateWeeklyCommission(
-                    $amountEur,
-                    $amountOriginal,
+                    $money,
                     $userId,
                     $paymentDate,
                     $this->config['fees']['out']['natural']['commission_fee_percent'],
@@ -106,7 +108,7 @@ class Calculator
 
             case 'legal':
                 return $this->calculateSimpleCommission(
-                    $amountOriginal,
+                    $money->getAmount(),
                     $this->config['fees']['out']['legal']['commission_fee_percent'],
                     $this->config['fees']['out']['legal']['min_fee']
                 );
@@ -115,8 +117,7 @@ class Calculator
     }
 
     public function calculateWeeklyCommission(
-        $amountEur,
-        $amountOriginal,
+        Money $money,
         $userId,
         DateTime $paymentDate,
         $feePercentage,
@@ -125,28 +126,24 @@ class Calculator
     ) {
         $year = $paymentDate->format('Y');
         $weekNumber = $paymentDate->format('W');
+        $amountEur = $money->getEurAmount();
+        $amount = $money->getAmount();
 
-        if (empty($this->paymentsCache[$userId][$year][$weekNumber]['total'])) {
-            $this->paymentsCache[$userId][$year][$weekNumber]['total'] = $amountEur;
-        } else {
-            $this->paymentsCache[$userId][$year][$weekNumber]['total'] += $amountEur;
-        }
+        $this->paymentsCache->setUserId($userId);
+        $this->paymentsCache->setYear($year);
+        $this->paymentsCache->setWeek($weekNumber);
+        $this->paymentsCache->addToTotal($amountEur);
+        $this->paymentsCache->incrementCount();
 
-        if (empty($this->paymentsCache[$userId][$year][$weekNumber]['count'])) {
-            $this->paymentsCache[$userId][$year][$weekNumber]['count'] = 1;
-        } else {
-            $this->paymentsCache[$userId][$year][$weekNumber]['count']++;
-        }
-
-        if ($this->paymentsCache[$userId][$year][$weekNumber]['total'] < $freePaymentsAmountPerWeek &&
-            $this->paymentsCache[$userId][$year][$weekNumber]['count'] <= $freePaymentsCountPerWeek
+        if ($this->paymentsCache->totalIsLessThan($freePaymentsAmountPerWeek) &&
+            $this->paymentsCache->countDoesNotExceed($freePaymentsCountPerWeek)
         ) {
-            return $this->format(0);
+            return $this->formatAndRound(0);
         } else {
             return $this->calculateSimpleCommission(
-                bcsub($this->paymentsCache[$userId][$year][$weekNumber]['total'], $amountEur) <
-                $freePaymentsAmountPerWeek ? bcsub($this->paymentsCache[$userId][$year][$weekNumber]['total'],
-                    $freePaymentsAmountPerWeek) : $amountOriginal,
+                bcsub($this->paymentsCache->getTotal(), $amountEur) <
+                $freePaymentsAmountPerWeek ? bcsub($this->paymentsCache->getTotal(),
+                    $freePaymentsAmountPerWeek) : $amount,
                 $feePercentage
             );
         }
