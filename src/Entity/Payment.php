@@ -13,14 +13,12 @@ use DateTime;
  */
 class Payment
 {
+    use TypedEntity;
     /**
      * @var DateTime
      */
     private $date;
-    /**
-     * @var string
-     */
-    private $type;
+
     /**
      * @var User
      */
@@ -87,14 +85,6 @@ class Payment
     }
 
     /**
-     * @return string
-     */
-    public function getType()
-    {
-        return $this->type;
-    }
-
-    /**
      * @param $type
      * @param $availableTypes
      * @throws InvalidPaymentTypeException
@@ -107,5 +97,4 @@ class Payment
 
         $this->type = $type;
     }
-
 }

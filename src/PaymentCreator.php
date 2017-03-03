@@ -84,6 +84,7 @@ class PaymentCreator
         }
 
         $payment->setUser($user);
+        $money->setCurrencyRates($this->config['currency_rates']);
         $payment->setMoney($money);
 
         return $payment;

@@ -3,14 +3,14 @@
 namespace Commission\Exception;
 
 /**
- * Class WrongUserIdException
+ * Class WrongPaymentTypeException
  *
  * @package Commission\Exception
  */
-class WrongUserIdException extends \Exception
+class WrongPaymentTypeException extends \Exception
 {
     /**
-     * WrongUserIdException constructor.
+     * WrongPaymentTypeException constructor.
      *
      * @param null            $message
      * @param int             $code
@@ -18,7 +18,7 @@ class WrongUserIdException extends \Exception
      */
     public function __construct($message = null, $code = 0, \Exception $previous = null)
     {
-        $message = 'Wrong user id supplied.';
+        $message = 'Wrong payment type.';
 
         parent::__construct($message, $code, $previous);
     }

@@ -12,14 +12,11 @@ use Commission\Exception\WrongUserIdException;
  */
 class User
 {
+    use TypedEntity;
     /**
      * @var int
      */
     private $id;
-    /**
-     * @var string
-     */
-    private $type;
 
     /**
      * @return int
@@ -40,14 +37,6 @@ class User
         }
 
         $this->id = (int)$id;
-    }
-
-    /**
-     * @return string
-     */
-    public function getType()
-    {
-        return $this->type;
     }
 
     /**

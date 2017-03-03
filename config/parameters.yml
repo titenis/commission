@@ -19,6 +19,10 @@ parameters:
         - EUR
         - USD
         - JPY
+      currency_rates:
+        EUR: 1
+        USD: 1.1497
+        JPY: 129.53
     calculator.config:
       fees:
         in:
@@ -32,7 +36,3 @@ parameters:
           legal:
             commission_fee_percent: 0.3
             min_fee: 0.5
-      currency_rates:
-        EUR: 1
-        USD: 1.1497
-        JPY: 129.53
