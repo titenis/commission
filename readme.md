@@ -1,5 +1,6 @@
 # Commissions calculation from file
 ## requirements
+- php 7.0
 - bcmath php extension
 
 ## commands to run
@@ -8,6 +9,8 @@
 
 ## commands to test
 - `php vendor/phpunit/phpunit/phpunit --coverage-text`
+
+![alt text](https://travis-ci.org/titenis/commission.svg?branch=master)
 
 ```
 Code Coverage Report:      
