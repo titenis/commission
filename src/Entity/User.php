@@ -32,7 +32,7 @@ class User
      */
     public function setId($id)
     {
-        if (ctype_digit($id) == false) {
+        if (filter_var($id, FILTER_VALIDATE_INT) == false) {
             throw new WrongUserIdException;
         }
 

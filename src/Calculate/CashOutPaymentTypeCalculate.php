@@ -4,7 +4,7 @@ namespace Commission\Calculate;
 
 use Commission\Entity\Payment;
 use Commission\Entity\PaymentsCache;
-use Commission\Exception\WrongUserTypeException;
+use Commission\Exception\InvalidUserTypeException;
 use Commission\MathInterface;
 
 /**
@@ -20,7 +20,7 @@ class CashOutPaymentTypeCalculate implements CommissionCalculateInterface
      * @param \Commission\Entity\PaymentsCache $paymentsCache
      * @param                                  $config
      * @return mixed
-     * @throws \Commission\Exception\WrongUserTypeException
+     * @throws \Commission\Exception\InvalidUserTypeException
      */
     public function calculateCommission(Payment $payment, MathInterface $math, PaymentsCache $paymentsCache, $config)
     {
@@ -29,7 +29,7 @@ class CashOutPaymentTypeCalculate implements CommissionCalculateInterface
         $className = '\\Commission\\Calculate\\' . $user->getCamelCasedType() . 'UserTypeCalculate';
 
         if (!class_exists($className)) {
-            throw new WrongUserTypeException;
+            throw new InvalidUserTypeException;
         }
 
         $calculate = new $className();

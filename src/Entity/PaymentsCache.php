@@ -180,7 +180,7 @@ class PaymentsCache
         $year = $this->getYear();
         $week = $this->getWeek();
 
-        return !isset($this->cache[$userId][$year][$week]['count']) ? 1 : $this->cache[$userId][$year][$week]['count'];
+        return !isset($this->cache[$userId][$year][$week]['count']) ? 0 : $this->cache[$userId][$year][$week]['count'];
     }
 
     /**

@@ -4,7 +4,7 @@ namespace Commission;
 
 use Commission\Entity\Payment;
 use Commission\Entity\PaymentsCache;
-use Commission\Exception\WrongPaymentTypeException;
+use Commission\Exception\InvalidPaymentTypeException;
 
 /**
  * Class Calculator
@@ -62,14 +62,14 @@ class Calculator
     /**
      * @param \Commission\Entity\Payment $payment
      * @return mixed
-     * @throws \Commission\Exception\WrongPaymentTypeException
+     * @throws \Commission\Exception\InvalidPaymentTypeException
      */
     public function calculateSingleCommission(Payment $payment)
     {
         $className = '\\Commission\\Calculate\\' . $payment->getCamelCasedType() . 'PaymentTypeCalculate';
 
         if (!class_exists($className)) {
-            throw new WrongPaymentTypeException;
+            throw new InvalidPaymentTypeException;
         }
 
         $calculate = new $className();

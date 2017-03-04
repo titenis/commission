@@ -60,7 +60,7 @@ class Math implements MathInterface
      */
     public function formatAndRound($number, $decimal = 2)
     {
-        return number_format($this->roundUp($number), $decimal);
+        return number_format($this->roundUp($number, $decimal), $decimal);
     }
 
     /**

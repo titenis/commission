@@ -34,7 +34,7 @@ class PaymentCreator
      */
     public function createFromArray($array)
     {
-        if (is_array($array[0])) {
+        if (isset($array[0]) && is_array($array[0])) {
             $payments = [];
 
             foreach ($array as $element) {
