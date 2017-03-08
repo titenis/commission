@@ -34,6 +34,8 @@ class CashInPaymentTypeCalculateTest extends TestCase
         $math = new Math();
         $payment = new Payment();
         $money = new Money($math);
+        $money->setCurrency('EUR', ['EUR']);
+        $money->setCurrencyRates(['EUR' => 1]);
         $money->setAmount(1000);
         $payment->setMoney($money);
 

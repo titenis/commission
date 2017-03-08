@@ -48,7 +48,7 @@ class Money
     public function getEurAmount()
     {
         $amount = $this->getAmount();
-        $currencyRate = $this->getCurrencyRate($this->getCurrency());
+        $currencyRate = $this->getCurrentCurrencyRate();
 
         return $this->math->div($amount, $currencyRate);
     }
@@ -72,6 +72,15 @@ class Money
         }
 
         $this->amount = $this->math->add(0, $amount);
+    }
+
+    /**
+     * @return mixed
+     * @throws \Commission\Exception\CurrencyNotFoundException
+     */
+    public function getCurrentCurrencyRate()
+    {
+        return $this->getCurrencyRate($this->getCurrency());
     }
 
     /**
@@ -126,14 +135,5 @@ class Money
         }
 
         $this->currency = $currency;
-    }
-
-    /**
-     * @return mixed
-     * @throws \Commission\Exception\CurrencyNotFoundException
-     */
-    public function getCurrentCurrencyRate()
-    {
-        return $this->getCurrencyRate($this->getCurrency());
     }
 }

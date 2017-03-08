@@ -37,6 +37,8 @@ class LegalUserTypeCalculateTest extends TestCase
         $payment = new Payment();
         $money = new Money($math);
         $money->setAmount(1000);
+        $money->setCurrency('EUR', ['EUR']);
+        $money->setCurrencyRates(['EUR' => 1]);
         $payment->setMoney($money);
 
         $this->assertEquals(10, $this->legalUserTypeCalculate->calculateCommission(
