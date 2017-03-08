@@ -26,10 +26,10 @@ class LegalUserTypeCalculate implements CommissionCalculateInterface
 
         return $math->formatAndRound(
             $math->calculateByPercentage(
-                $money->getAmount(),
+                $money->getEurAmount(),
                 $config['fees']['out']['legal']['commission_fee_percent'],
                 $config['fees']['out']['legal']['min_fee']
-            )
+            ) * $money->getCurrentCurrencyRate()
         );
     }
 }

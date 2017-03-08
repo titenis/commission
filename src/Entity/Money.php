@@ -127,4 +127,13 @@ class Money
 
         $this->currency = $currency;
     }
+
+    /**
+     * @return mixed
+     * @throws \Commission\Exception\CurrencyNotFoundException
+     */
+    public function getCurrentCurrencyRate()
+    {
+        return $this->getCurrencyRate($this->getCurrency());
+    }
 }

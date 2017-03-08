@@ -26,11 +26,11 @@ class CashInPaymentTypeCalculate implements CommissionCalculateInterface
 
         return $math->formatAndRound(
             $math->calculateByPercentage(
-                $money->getAmount(),
+                $money->getEurAmount(),
                 $config['fees']['in']['commission_fee_percent'],
                 null,
                 $config['fees']['in']['max_fee']
-            )
+            ) * $money->getCurrentCurrencyRate()
         );
     }
 }

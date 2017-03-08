@@ -34,7 +34,6 @@ class NaturalUserTypeCalculate implements CommissionCalculateInterface
         $weekNumber = $paymentDate->format('W');
 
         $amountEur = $money->getEurAmount();
-        $amount = $money->getAmount();
 
         $paymentsCache->setUserId($user->getId());
         $paymentsCache->setYear($year);
@@ -51,12 +50,12 @@ class NaturalUserTypeCalculate implements CommissionCalculateInterface
                 // Get the amount which exceeds limit
                 $amountToBeUsed = $math->sub($paymentsCache->getTotal(), $freePaymentsAmountPerWeek);
             } else {
-                $amountToBeUsed = $amount;
+                $amountToBeUsed = $amountEur;
             }
 
             $result = $math->calculateByPercentage($amountToBeUsed, $feePercentage);
         }
 
-        return $math->formatAndRound($result);
+        return $math->formatAndRound($result * $money->getCurrentCurrencyRate());
     }
 }
